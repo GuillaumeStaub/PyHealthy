@@ -17,12 +17,20 @@ class ProductDownloader:
             criterion on the OpenFoodFacts API
             page_size (int): Number of products requested
         """
-        self.json = 1
-        self.tagtype_0 = "categories"
-        self.tag_contains_0 = "contains"
-        self.tag_0 = category
-        self.page_size = page_size
-        self.action = "process"
+        self.category = category
+        self.params = {"json": 1, "tagtype_0": "categories",
+                       "tag_contains_0": "contains", "tag_0": self.category,
+                       "page_size": page_size, "action": "process"}
+
+    def add_category(self, products):
+        """Allows to add in each product recovered via
+        the API a key specifying its main category contained in the constants
+
+        Args:
+            products (list): A list of products in the form of a dictionary
+        """
+        for product in products:
+            product["main_category"] = self.category
 
     @property
     def recover_product(self):
@@ -34,8 +42,10 @@ class ProductDownloader:
             list : list containing all requested products
         """
         r = requests.get("https://world.openfoodfacts.org/cgi/search.pl",
-                         params=self.__dict__)
-        return r.json()["products"]
+                         params=self.params)
+        products = r.json()["products"]
+        self.add_category(products)
+        return products
 
 
 if __name__ == "__main__":

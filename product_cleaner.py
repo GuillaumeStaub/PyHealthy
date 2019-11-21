@@ -17,7 +17,7 @@ class ProductCleaner:
         Gross_productscontains a list of x products.
 
         """
-        self.gross_products = [ProductDownloader(term, 100).recover_product
+        self.gross_products = [ProductDownloader(term, 1000).recover_product
                                for term in search_terms]
 
     @property
@@ -35,17 +35,32 @@ class ProductCleaner:
         for liste_product in self.gross_products:
             for product in liste_product:
                 try:
-                    clean_products.append(
-                        {"name": product["product_name_fr"],
-                         "categories": product["categories_tags"],
-                         "nutriscore": product["nutrition_grades"],
-                         "url": product["url"],
-                         "sotres": product["stores_tags"]})
+                    if self.is_valid(product["product_name_fr"]) and \
+                       self.is_valid(product["stores_tags"]):
+                        clean_products.append(
+                            {"name": product["product_name_fr"],
+                             "categories": product["main_category"],
+                             "nutriscore": product["nutrition_grades"],
+                             "url": product["url"],
+                             "stores": product["stores_tags"]})
                 except KeyError:
-                    pass
+                    continue
         return clean_products
+
+    def is_valid(self, product):
+        """Check if some of the data needed to run the program is present
+
+        Args:
+            product (str): contains information that must be NO NULL
+
+        Returns:
+            bool: returns true if the information is present if not false
+        """
+        if product != "" and product != []:
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
-    a = ProductCleaner()
-    print(a.clean_products[0])
+    pass
