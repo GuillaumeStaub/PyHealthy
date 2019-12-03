@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+
+[packages]
+records = "*"
+requests = "*"
+sqlalchemy = "*"
+mysql = "*"
+mysql-python = "*"
+mysql-connector-python = "*"
+tqdm = "*"
+click = "*"
+
+[requires]
+python_version = "3.7"

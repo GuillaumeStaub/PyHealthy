@@ -1,4 +1,3 @@
-from product_downloader import ProductDownloader
 from config.constants import search_terms
 
 
@@ -11,14 +10,13 @@ class ProductCleaner:
         list: clean products
     """
 
-    def __init__(self):
+    def __init__(self, gross_products):
         """Method that initializes a list with the ProductDownloader class.
         The search terms are in the constants in the datas folder.
         Gross_productscontains a list of x products.
 
         """
-        self.gross_products = [ProductDownloader(term, 1000).recover_product
-                               for term in search_terms]
+        self.gross_products = gross_products
 
     @property
     def clean_products(self):

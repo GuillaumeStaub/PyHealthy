@@ -1,4 +1,7 @@
 import requests
+import sys
+import logging
+from config.constants import api_url_OPFF
 
 
 class ProductDownloader:
@@ -18,9 +21,14 @@ class ProductDownloader:
             page_size (int): Number of products requested
         """
         self.category = category
-        self.params = {"json": 1, "tagtype_0": "categories",
-                       "tag_contains_0": "contains", "tag_0": self.category,
-                       "page_size": page_size, "action": "process"}
+        self.params = {
+            "json": 1,
+            "tagtype_0": "categories",
+            "tag_contains_0": "contains",
+            "tag_0": self.category,
+            "page_size": page_size,
+            "action": "process",
+            "language": "fr"}
 
     def add_category(self, products):
         """Allows to add in each product recovered via
@@ -41,8 +49,7 @@ class ProductDownloader:
         Returns:
             list : list containing all requested products
         """
-        r = requests.get("https://world.openfoodfacts.org/cgi/search.pl",
-                         params=self.params)
+        r = requests.get(api_url_OPFF, params=self.params)
         products = r.json()["products"]
         self.add_category(products)
         return products
