@@ -1,6 +1,4 @@
 import requests
-import sys
-import logging
 from config.constants import api_url_OPFF
 
 

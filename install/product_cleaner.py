@@ -1,5 +1,3 @@
-from config.constants import search_terms
-
 
 class ProductCleaner:
     """This class instantiates the ProductDownloader class.
