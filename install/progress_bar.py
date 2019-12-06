@@ -33,7 +33,8 @@ class ProgressBar(Thread):
         """A loop that runs a number of times predefined by self.time_progressbar
          each turn the bar advances.
         """
-        for _ in tqdm(range(self.time_progressbar), desc="Téléchargement des données en cours"):
+        for _ in tqdm(range(self.time_progressbar),
+                      desc="Téléchargement des données en cours"):
             if not self.killed:
                 sleep(0.5)
             else:

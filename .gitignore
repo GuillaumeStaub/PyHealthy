@@ -1,6 +1,7 @@
-__pycache__/
+*__pycache__/
 config/__pycache__/
 .env
 *.pyc
 .vscode/
 install/myapp.log
+.DS_Store

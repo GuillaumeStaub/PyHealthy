@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from config.constants import Base, store_product
 from database.category import Category
+from database.store import Store
 
 
 class Product(Base):
@@ -82,6 +83,10 @@ class Product(Base):
         return(f"\033[94m Nom du produit:\033[0m {self.name.capitalize()}"
                f"\033[94m Catégorie:\033[0m {self.category.name.capitalize()}"
                f"\033[94m Nutriscore:\033[0m {self.nutriscore.upper()}")
+
+    @property
+    def format_stores(self):
+        return ", ".join([x.name.capitalize() for x in self.stores])
 
 
 if __name__ == "__main__":

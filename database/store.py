@@ -14,4 +14,3 @@ class Store(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(80), unique=True, nullable=False)
-    
