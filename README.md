@@ -4,10 +4,10 @@
 
 Cette application basée sur le Terminal interroge l'API d'[OpenFoodFacts](https://fr.openfoodfacts.org) afin de trouver un substitut plus sain à un aliment recherché. Donc si si vous voulez trouver un substitut à votre boisson américaine préférée vous avez juste à la renseigner et magie l'application vous retourne un équivalent bien meilleur pour vos kilos en trop. En plus d'afficher le substitut, PyHealthy, vous propose des magasins où le trouver, son NutriScore et un lien vers OFF pour visionner d'avantages d'informations.
 
-# Fonctionnement technique général
+# Fonctionnement général
 
 Tout d'abord il faut récupérer les données, pour cela j'utilise l'API d'OpenFoodFacts qui est libre et 100% gratuite. La documentation est disponible sur leur [site](https://en.wiki.openfoodfacts.org/API/Read/Search).<br>
-Une fois le fonctionnement de l'API bien intégré (après s'être arraché tous les cheveux 😱) j'utilise le module [Requests](https://requests-fr.readthedocs.io/en/latest/) afin d'effectuer la requête vers OFF qui renvoie des données en json. L'application nettoie les données (les données vides) et les mets de côté, elle crée la base de données et y insèrent les données nettoyées. Pour la base de données j'utilise un ORM [SQLAlchemy](https://www.sqlalchemy.org).
+Une fois le fonctionnement de l'API bien intégré (après s'être arraché tous les cheveux 😱) j'utilise le module [Requests](https://requests-fr.readthedocs.io/en/latest/) afin d'effectuer la requête vers OFF qui renvoie des données en json. L'application nettoie les données (les données vides) et les mets de côté, elle crée la base de données et y insèrent les données nettoyées. Pour la base de données j'utilise un ORM [SQLAlchemy](https://www.sqlalchemy.org) communiquant avec une base de données MySQL.
 
 # Visuels
 
@@ -43,36 +43,146 @@ Si vous êtes un utilisateur de MacOS je vous recommande d'utiliser [HomeBrew](h
 4. Cliquez sur Next puis Execute
 5. Sur la page **MySQL Server Configuration** configurez un mot de passe pour l'utilisateur root qui sera l'utilisateur que nous utiliserons pour le programme. **ATTENTION** mémorisez le ou écrivez le. 
 6. Vérifiez le chemin vers MySQL dans votre ordinateur par exemple : `C:\Program Files\MySQL\MySQL Server 5.6\bin` et faites la commande suivante :
-`set PATH=%PATH%;chemin_vers_mysql_bin`
+   ```
+   set PATH=%PATH%;chemin_vers_mysql_bin
+   ```
 7. Nous allons créer la base de données essentielle à l'utilisation du programme. Rendez-vous dans l'invite de commande et tapez : 
    `mysql -u root -p`
 Tapez votre votre mot de passe  et vous voilà connecté à MySQL
 8. Nous allons créer la base de données. Pour cela tapez : 
 ```SQL
-CREATE DATABASE nom_de_votre_base CHARACTER SET 'utf8mb4' COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE nom_de_votre_base CHARACTER SET 'utf8mb4' COLLATE utf8mb4_bin;
 ```
-**Le `collate utf8mb4_unicode_ci` est indispensable au fonctionnement du programme il est essentiel.**
+**Le `collate utf8mb4_bin` est indispensable au fonctionnement du programme il est essentiel.**
 
 ### Initialisation du programme
 
 
 1. Ouvrez la console et naviguez jusqu'à la racine du projet PyHealthy avec la commande `$ cd \...\Pyhealthy`
 
-2. Tout le fonctionnement du programme est basé sur l'utilisation du fichier **.env**. En effet c'est à l'intérieur de ce fichier qu'est stocké la constante `DATABASE_URL`.
+2. Tout le fonctionnement du programme est basé sur l'utilisation d'une variable d'environnement contenu dans un fichier **.env**. En effet c'est à l'intérieur de ce fichier qu'est stocké la constante `DATABASE_URL`.
    1. Dans la console toujours au niveau du dossier racine de PyHealthy tapez `dir > .env`
    2. Ouvrez ce fichier avec un éditeur de texte si des éléments sont déjà présents effacez les 
-   3. Maintenant écrire dans le fichier `.env`les éléments suivants : `DATABASE_URL = 'mysql+mysqlconnector://root:votre_mot_de_passe@localhost/nom_de_votre_base_de_données?charset=utf8mb4'` 
+   3. Maintenant écrire dans le fichier `.env`les éléments suivants : 
+   ```
+   DATABASE_URL = 'mysql+pymysql://root:votre_mot_de_passe@localhost/nom_de_votre_base_de_données?charset=utf8mb4'
+   ```
    4. Sauvegardez et fermez le fichier
    
 3. Vérifiez que pipenv est installé sur votre machine avec `$ pipenv --version`si la réponse ressemble à : `pipenv, version 2018.XX.XX`c'est ok. Sinon installez pipenv avec `$ pip install pipenv`
-4. **Si vous démarrez le programme pour la première fois** vous devez d'abord initialiser la requête, la création de la base de données et son remplissage. Pour cela assurez-vous bien d'être à la racine de PyHealthy et lancez cette commande: 
-```bash
-\PyHealthy pipenv run python home.py --install [--count=100]
+4. Une fois pipenv installé tapez la commande 
+   ```
+   $ ~\PyHealthy pipenv install
+   ```
+5. **Si vous démarrez le programme pour la première fois** vous devez d'abord initialiser la requête, la création de la base de données et son remplissage. Pour cela assurez-vous bien d'être à la racine de PyHealthy et lancez cette commande: 
+    ```bash
+    $ ~\PyHealthy pipenv run python home.py --install [--count=100]
+    ```
+    *[--count]* est optionnel il correspond au nombre de produits que vous souhaitez télécharger d'OpenFoodFact par catégorie. Il est préréglé à 100 produits
+
+6. Vous pouvez maintenant utiliser correctement le programme avec la commande `pipenv run python home.py`
+
+## ![MacOS_icon](https://img.icons8.com/plasticine/48/000000/mac-os.png) Pour les utilisateurs de MacOS
+
+### ![Mysql_logo](https://img.icons8.com/ios-filled/50/000000/mysql-logo.png) Installer MySQL
+1. Deux possibilités :
+   1. Vous pouvez vous rendre sur le site de MySQL [MySQL](https://dev.mysql.com/downloads/mysql/#downloads) et télécharger le DMG
+    2. Ou vous utilisez [HomeBrew](https://brew.sh/)
+   ```
+   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+   ```
+    pour l'installer. Puis vous faites la commande `$ brew install mysql` pour installer mysql
+2. Pour configurer le mot de passe de l'utilisateur root que nous utiliserons pour la suite du programme : `/usr/local/mysql/bin/mysqladmin -u root password votre_mot_de_passe`
+3. Pour ceux qui ont installé MySQL via le site de MySQL sans avoir utiliser HomeBrew tapez la commande suivant pour utiliser mysql depuis le terminal :
+   ```
+   echo 'export PATH=/usr/local/mysql/bin:$PATH' >> ~/.profile
+   ```
+4. Nous allons créer la base de données essentielle à l'utilisation du programme. Rendez-vous dans l'invite de commande et tapez : 
+   `mysql -u root -p`
+Tapez votre votre mot de passe  et vous voilà connecté à MySQL
+5. Nous allons créer la base de données. Pour cela tapez : 
+    ```SQL
+    CREATE DATABASE nom_de_votre_base CHARACTER SET 'utf8mb4' COLLATE utf8mb4_bin;
+    ```
+    **Le `collate utf8mb4_bin` est indispensable au fonctionnement du programme il est essentiel.**
+### Initialisation du programme
+
+
+1. Ouvrez le terminal et naviguez jusqu'à la racine du projet PyHealthy avec la commande `$ cd \...\Pyhealthy`
+
+2. Tout le fonctionnement du programme est basé sur l'utilisation d'une variable d'environnement contenu dans le fichier **.env**. En effet c'est à l'intérieur de ce fichier qu'est stocké la constante `DATABASE_URL`.
+   1. Dans la console toujours au niveau du dossier racine de PyHealthy tapez `$ touch .env`
+   2. Ouvrez ce fichier avec un éditeur de texte comme vim ou nano au choix `$ vim .env`
+   3. Maintenant écrire dans le fichier `.env`les éléments suivants : 
+   ```
+   DATABASE_URL = 'mysql+pymysql://root:votre_mot_de_passe@localhost/nom_de_votre_base_de_données?charset=utf8mb4'
+   ```
+   4. Sauvegardez et fermez le fichier
+   
+3. Vérifiez que pipenv est installé sur votre machine avec `$ pipenv --version`si la réponse ressemble à : `pipenv, version 2018.XX.XX`c'est ok. Sinon installez pipenv avec `$ pip3 install pipenv`
+4. Une fois pipenv installé tapez la commande 
+   ```
+   $ ~\PyHealthy pipenv install
+   ```
+5. **Si vous démarrez le programme pour la première fois** vous devez d'abord initialiser la requête, la création de la base de données et son remplissage. Pour cela assurez-vous bien d'être à la racine de PyHealthy et lancez cette commande: 
+    ```bash
+    $ ~\PyHealthy pipenv run python home.py --install [--count=100]
+    ```
+    *[--count]* est optionnel il correspond au nombre de produits que vous souhaitez télécharger d'OpenFoodFact par catégorie. Il est préréglé à 100 produits
+
+6. Vous pouvez maintenant utiliser correctement le programme avec la commande `pipenv run python home.py`
+
+## ![Linux_icon](https://img.icons8.com/color/48/000000/linux.png) Pour les utilisateurs de Linux
+
+### ![Mysql_logo](https://img.icons8.com/ios-filled/50/000000/mysql-logo.png) Installer MySQL
+#### ![Debian_icon](https://img.icons8.com/color/30/000000/debian.png )Sous Debian ou ![Ubuntu_icon](https://img.icons8.com/color/30/000000/ubuntu--v1.png)Ubuntu
+- Exécutez la commande suivante :
+   ```
+   sudo apt-get install mysql-server mysql-client
+   ```
+### ![RedHat_icon](https://img.icons8.com/windows/30/000000/redhat.png)Sous RedHat
+- Executez la commande suivante
+    ```
+    sudo yum install mysql mysql-server
+    ```
+Dans tous les cas pour initialiser le mot de passe de l'utilisateur root que vous utiliserons pour la suite du programme tapez la commande suivant : 
 ```
-*[--count]* est optionnel il correspond au nombre de produits que vous souhaitez télécharger d'OpenFoodFact par catégorie. Il est préréglé à 100 produits
+sudo mysqladmin -u root -h localhost password votre_mot_de_passe
+```
+1. Nous allons créer la base de données essentielle à l'utilisation du programme. Rendez-vous dans l'invite de commande et tapez : 
+   `mysql -u root -p`
+Tapez votre votre mot de passe  et vous voilà connecté à MySQL
+2. Nous allons créer la base de données. Pour cela tapez : 
+    ```SQL
+    CREATE DATABASE nom_de_votre_base CHARACTER SET 'utf8mb4' COLLATE utf8mb4_bin;
+    ```
+    **Le `collate utf8mb4_bin` est indispensable au fonctionnement du programme il est essentiel.**
+### Initialisation du programme
 
-5. Vous pouvez maintenant utiliser correctement le programme avec la commande `pipenv run python home.py`
 
+1. Ouvrez le terminal et naviguez jusqu'à la racine du projet PyHealthy avec la commande `$ cd \...\Pyhealthy`
+
+2. Tout le fonctionnement du programme est basé sur l'utilisation d'une variable d'environnement contenu dans le fichier **.env**. En effet c'est à l'intérieur de ce fichier qu'est stocké la constante `DATABASE_URL`.
+   1. Dans la console toujours au niveau du dossier racine de PyHealthy tapez `$ touch .env`
+   2. Ouvrez ce fichier avec un éditeur de texte comme vim ou nano au choix `$ vim .env`
+   3. Maintenant écrire dans le fichier `.env`les éléments suivants : 
+   ```
+   DATABASE_URL = 'mysql+pymysql://root:votre_mot_de_passe@localhost/nom_de_votre_base_de_données?charset=utf8mb4'
+   ``` 
+   4. Sauvegardez et fermez le fichier
+   
+3. Vérifiez que pipenv est installé sur votre machine avec `$ pipenv --version`si la réponse ressemble à : `pipenv, version 2018.XX.XX`c'est ok. Sinon installez pipenv avec `$ pip3 install pipenv`
+4. Une fois pipenv installé tapez la commande 
+   ```
+   $ ~\PyHealthy pipenv install
+   ```
+5. **Si vous démarrez le programme pour la première fois** vous devez d'abord initialiser la requête, la création de la base de données et son remplissage. Pour cela assurez-vous bien d'être à la racine de PyHealthy et lancez cette commande: 
+    ```bash
+    $ ~\PyHealthy pipenv run python home.py --install [--count=100]
+    ```
+    *[--count]* est optionnel il correspond au nombre de produits que vous souhaitez télécharger d'OpenFoodFact par catégorie. Il est préréglé à 100 produits
+
+6. Vous pouvez maintenant utiliser correctement le programme avec la commande `pipenv run python home.py`
 
 # Compétences mobilisées
 

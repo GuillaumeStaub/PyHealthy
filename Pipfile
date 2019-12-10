@@ -9,11 +9,11 @@ pylint = "*"
 [packages]
 requests = "*"
 sqlalchemy = "*"
-mysql = "*"
 mysql-connector-python = "*"
 tqdm = "*"
 click = "*"
 pyfiglet = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.7"
