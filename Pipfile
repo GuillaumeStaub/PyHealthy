@@ -7,14 +7,13 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-records = "*"
 requests = "*"
 sqlalchemy = "*"
 mysql = "*"
-mysql-python = "*"
 mysql-connector-python = "*"
 tqdm = "*"
 click = "*"
+pyfiglet = "*"
 
 [requires]
 python_version = "3.7"
