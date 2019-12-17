@@ -223,7 +223,9 @@ class Client():
             prYellow("Le produit substitué est :")
             print(f["fat_product"])
             prYellow("Le substitut est :")
-            print(f["healthy_product"])
+            print(f'{f["healthy_product"]}'
+                  f" \033[94m Magasins où acheter:\033[0m "
+                  f'{f["healthy_product"].format_stores}')
             print(f"*****************************"
                   f"************************************")
             print()
