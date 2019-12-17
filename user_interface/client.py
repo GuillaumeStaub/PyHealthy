@@ -46,6 +46,7 @@ class Client():
         self.answer_category = None
         self.subsitue_answer = None
         self.answer_product = None
+        self.favorites = []
         f = Figlet(font='slant')
         prPurple(f.renderText('Welcome on PyHealthy'))
         print(f"Bienvenue sur PyHealthy, l'application qui a pour but de"
