@@ -49,14 +49,12 @@ class Product(Base):
         Args:
             session (session): allow to send requests to the database
             product_s (Products): Database Product object
-            category (int): category is an integer that matches the id of
-            the category whose products are to be retrieved.
 
         Returns:
             Products: Database Product object
         """
         result = session.query(Product)\
-                        .filter(Product.category_id == category)\
+                        .filter(Product.category_id == fat_product.category_id)\
                         .filter(Product.nutriscore < fat_product.nutriscore)\
                         .limit(1).first()
         return result

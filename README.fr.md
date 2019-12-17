@@ -1,3 +1,5 @@
+[![Badge langage](https://img.shields.io/static/v1?label=langage&message=Français&color=blue)](https://github.com/GuillaumeStaub/PyHealthy/blob/master/README.fr.md)
+[![Badge langage](https://img.shields.io/static/v1?label=langage&message=English&color=blue)](https://github.com/GuillaumeStaub/PyHealthy/blob/master/README.md)
 # PyHealthy
 
 # Pourquoi ce programme ?
@@ -15,7 +17,7 @@ Une fois le fonctionnement de l'API bien intégré (après s'être arraché tous
 <div align="center" font-style='italic'>Page d'accueil du programme.</div>
 
 # Installation
-Pour commencer, utilisez le bouton ![clone or download](datas/button.png)  sur github et téléchargez ZIP sur votre ordinateur, ou copiez le lien HTTPS et utilisez le terminal sur votre ordinateur et tapez :
+Pour commencer, utilisez le bouton [![clone or download](datas/button.png)](https://github.com/GuillaumeStaub/PyHealthy#branch-select-menu)  sur github et téléchargez ZIP sur votre ordinateur, ou copiez le lien HTTPS et utilisez le terminal sur votre ordinateur et tapez :
 
 `$ git clone https://github.com/GuillaumeStaub/PyHealthy.git `
 

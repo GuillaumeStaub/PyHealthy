@@ -1,5 +1,5 @@
 [![Badge langage](https://img.shields.io/static/v1?label=langage&message=Français&color=blue)](https://github.com/GuillaumeStaub/PyHealthy/blob/master/README.fr.md)
-[![Badge langage](https://img.shields.io/static/v1?label=langage&message=Anglais&color=blue)](https://github.com/GuillaumeStaub/PyHealthy/blob/master/README.md)
+[![Badge langage](https://img.shields.io/static/v1?label=langage&message=English&color=blue)](https://github.com/GuillaumeStaub/PyHealthy/blob/master/README.md)
 # PyHealthy
 
 ## Why this program?
@@ -8,7 +8,7 @@ This application, based on the Terminal, queries the [OpenFoodFacts](https://fr.
 
 # General operation
 
-First of all, you have to recover the data, for that I use the OpenFoodFacts API which is free and 100% free. The documentation is available on their website [website](https://en.wiki.openfoodfacts.org/API/Read/Search) . Once the operation of the API is well integrated (after having ripped all the hair 😱) I use the module [Requests](https://requests-fr.readthedocs.io/en/latest/) to make the request to OFF which returns data in json. The application cleans the data (empty data) and sets it aside, creates the database and inserts the cleaned data into it. For the database, I use a [SQLAlchemy](https://www.sqlalchemy.org) ORM communicating with a MySQL database.
+First of all, you have to recover the data, for that I use the OpenFoodFacts API which is free and 100% free. The documentation is available on their  [website](https://en.wiki.openfoodfacts.org/API/Read/Search) . Once the operation of the API is well integrated (after having ripped all the hair 😱) I use the module [Requests](https://requests-fr.readthedocs.io/en/latest/) to make the request to OFF which returns data in json. The application cleans the data (empty data) and sets it aside, creates the database and inserts the cleaned data into it. For the database, I use a [SQLAlchemy](https://www.sqlalchemy.org) ORM communicating with a MySQL database.
 
 # Visual
 
@@ -17,7 +17,7 @@ First of all, you have to recover the data, for that I use the OpenFoodFacts API
 
 # Installation
 
-To start, use the ![clone or download](datas/button.png) button on github and download ZIP to your computer, or copy the HTTPS link and use the terminal on your computer and type:
+To start, use the [![clone or download](datas/button.png)](https://github.com/GuillaumeStaub/PyHealthy#branch-select-menu) button on github and download ZIP to your computer, or copy the HTTPS link and use the terminal on your computer and type:
 ```
 $ git clone https://github.com/GuillaumeStaub/PyHealthy.git
 ```

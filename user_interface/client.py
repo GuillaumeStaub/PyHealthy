@@ -1,14 +1,17 @@
 import sys
+import logging
 
 from pyfiglet import Figlet
 
+from sqlalchemy import inspect
+from sqlalchemy.exc import InternalError
 
 from database.category import Category
 from database.product import Product
 from database.favorites import Favorites
 
 from config.session import Session
-from config.constants import prCyan, prPurple, prRed, prYellow
+from config.constants import prCyan, prPurple, prRed, prYellow, read_log
 
 
 class Client():
@@ -31,7 +34,8 @@ class Client():
         self.dict_category = {}
         self.product = []
         self.favorites = []
-        self.session = Session().session
+        self.init_session = Session()
+        self.session = self.init_session.session
 
     def home(self):
         """Corresponds to the main menu This method offers two options
@@ -45,10 +49,10 @@ class Client():
         f = Figlet(font='slant')
         prPurple(f.renderText('Welcome on PyHealthy'))
         print(f"Bienvenue sur PyHealthy, l'application qui a pour but de"
-              f"mettre un peu plus de sains dans votre vie.")
+              f" mettre un peu plus de sains dans votre vie.")
         prRed(
             f"À tout moment dans le programme faites [q]"
-            f"pour quitter ou [b] pour revenir au menu principal")
+            f" pour quitter ou [b] pour revenir au menu principal")
         print("Que souhaitez-vous faire ? ")
         prCyan("1. Voulez-vous substituer un produit ? ")
         prCyan("2. Voulez-vous accéder à vos aliments déjà substitués ?")
@@ -67,7 +71,7 @@ class Client():
         self.answer_home = 0
         self.answer_product = 0
         print(f"Choisissez une catégorie parmi les suivantes"
-              f"en tapant le chiffre correspondant:")
+              f" en tapant le chiffre correspondant:")
         c = Category()
         self.dict_category = {
             row.id: row.name for row in c.select_categories(
@@ -130,7 +134,7 @@ class Client():
               f"{self.healthy_product.format_stores}")
         prCyan(
             f"Souhaitez-vous sauvegarder dans vos favoris"
-            f"le substitut et le produit substitué ? [y] or [n]")
+            f" le substitut et le produit substitué ? [y] or [n]")
         while True:
             self.subsitue_answer = input("Votre choix : ")
             if self.subsitue_answer in ["q", "Q"]:
@@ -140,7 +144,7 @@ class Client():
             elif self.subsitue_answer.lower() == "y":
                 self.save_products()
                 prYellow(f"Produit sauvegardé dans la"
-                         f"base de données avec succès")
+                         f" base de données avec succès")
                 prCyan("Voulez-vous retourner au menu principal [y] ou [n]")
                 self.subsitue_answer = input("Vottre choix :")
                 if self.subsitue_answer.lower() == "n":
@@ -152,8 +156,8 @@ class Client():
             elif self.subsitue_answer.lower() == "n":
                 prCyan(
                     f"Vous ne souhaitez pas enregistrer le substitut."
-                    f"Souhaitez-vous quitter le programme ou retourner"
-                    f"au menu principal?")
+                    f" Souhaitez-vous quitter le programme ou retourner"
+                    f" au menu principal?")
                 prCyan("[q] pour quitter ou [m] pour aller au menu")
                 self.subsitue_answer = input("Vottre choix :")
                 if self.subsitue_answer.lower() == "q":
@@ -263,6 +267,28 @@ class Client():
                     f"Saisissez un chiffre entre 1 et"
                     f" {size} et non une lettre.")
         return answer
+
+    def verify_db(self):
+        try:
+            table_names = inspect(self.init_session.engine).get_table_names()
+            assert table_names != []
+        except AssertionError:
+            logging.critical(
+                f"The database has been created, but there are "
+                f"no tables necessary for the program to operate. "
+                f"Please use the command"
+                f"$ pipenv run python home.py --install")
+            read_log()
+            return False
+        except InternalError:
+            logging.critical(
+                f"The program has not been installed. "
+                f"Before you can use the program it is necessary to install "
+                f"it with the following command: "
+                f"$ pipenv run python home.py --install")
+            read_log()
+            return False
+        return True
 
 
 if __name__ == "__main__":

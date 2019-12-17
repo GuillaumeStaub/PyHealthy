@@ -4,7 +4,7 @@ import json
 import sys
 
 from sqlalchemy import inspect
-from sqlalchemy.exc import ProgrammingError
+from sqlalchemy.exc import ProgrammingError, InternalError
 
 from install.product_downloader import ProductDownloader
 from install.product_cleaner import ProductCleaner
@@ -139,9 +139,10 @@ def main(count):
         count (int): count is the number of products loaded into the database
         decided by the user when the program is launched.
     """
-    verify_db()
+
     try:
         p = ProgressBar(count)
+        verify_db()
         p.start()
         i = Install(count)
         i.create_bdd()
@@ -155,11 +156,17 @@ def main(count):
     except json.decoder.JSONDecodeError:
         p.kill()
         logging.critical(
-            'There is a problem with datas.\
-             Verify the link in config.constants')
+            f'There is a problem with datas. '
+            f'Verify the link in config.constants')
     except ProgrammingError as e:
         p.kill()
         logging.critical(e)
+    except InternalError:
+        p.kill()
+        logging.critical(
+            f'There is a problem with the '
+            f"name of your database in the .env "
+            f"file. Is it creating or is there not an error?")
     finally:
         read_log()
 

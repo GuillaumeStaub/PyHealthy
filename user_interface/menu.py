@@ -66,8 +66,9 @@ def main():
     """Initialize the menu and launch the tree function
     """
     m = Menu()
-    while True:
-        m.tree()
+    if m.client.verify_db():
+        while True:
+            m.tree()
 
 
 if __name__ == "__main__":
